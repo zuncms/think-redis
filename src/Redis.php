@@ -2,6 +2,8 @@
 
 namespace Zuncms\ThinkRedis;
 
+use think\App;
+use Zuncms\Helper\Arr;
 use InvalidArgumentException;
 use Zuncms\ThinkRedis\Contracts\Factory;
 use Zuncms\ThinkRedis\Connections\Connection;
@@ -41,7 +43,7 @@ class Redis implements Factory
      *
      * @var bool
      */
-    protected $events = false;
+    protected $event = false;
 
     /**
      * Create a new Redis manager instance.
@@ -131,8 +133,8 @@ class Redis implements Factory
     {
         $connection->setName($name);
 
-        if ($this->events && $this->app->bound('events')) {
-            $connection->setEventDispatcher($this->app->make('events'));
+        if ($this->event && $this->app->bound('event')) {
+            $connection->setEventDispatcher($this->app->make('event'));
         }
 
         return $connection;
@@ -164,19 +166,19 @@ class Redis implements Factory
     }
 
     /**
-     * Enable the firing of Redis command events.
+     * Enable the firing of Redis command event.
      */
-    public function enableEvents()
+    public function enableEvent()
     {
-        $this->events = true;
+        $this->event = true;
     }
 
     /**
-     * Disable the firing of Redis command events.
+     * Disable the firing of Redis command event.
      */
-    public function disableEvents()
+    public function disableEvent()
     {
-        $this->events = false;
+        $this->event = false;
     }
 
     /**
@@ -190,5 +192,19 @@ class Redis implements Factory
     public function __call($method, $parameters)
     {
         return $this->connection()->{$method}(...$parameters);
+    }
+
+    /**
+     * Register the service provider.
+     *
+     * @param \think\App $app
+     *
+     * @return \Zuncms\ThinkRedis\Redis
+     */
+    public static function __make(App $app)
+    {
+        $config = $app->config->get('redis', []);
+
+        return new self($app, Arr::pull($config, 'client', 'predis'), $config);
     }
 }

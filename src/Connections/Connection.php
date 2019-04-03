@@ -127,7 +127,7 @@ abstract class Connection
     protected function event($event)
     {
         if (isset($this->event)) {
-            $this->event->trigger($event);
+            $this->event->trigger($event, $event->toArray());
         }
     }
 

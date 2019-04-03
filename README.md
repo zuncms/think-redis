@@ -9,9 +9,18 @@
 $ composer require zuncms/think-redis -vvv
 ```
 
+provider.php 中 增加
+```php
+return [
+    ...
+    'redis' => \Zuncms\ThinkRedis\Redis::class,
+    ...
+];
+```
+
 ## Usage
 
-TODO
+参考 laravel redis
 
 ## Contributing
 

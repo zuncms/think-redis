@@ -55,4 +55,15 @@ class CommandExecuted
         $this->connection = $connection;
         $this->connectionName = $connection->getName();
     }
+
+    public function toArray()
+    {
+        return [
+            'time' => $this->time,
+            'command' => $this->command,
+            'parameters' => $this->parameters,
+            'connection' => $this->connection,
+            'connectionName' => $this->connectionName,
+        ];
+    }
 }

@@ -113,7 +113,7 @@ abstract class Connection
         $time = round((microtime(true) - $start) * 1000, 2);
 
         if (isset($this->event)) {
-            $this->event(new CommandExecuted($method, $parameters, $time, $this));
+            $this->event(CommandExecuted::class, new CommandExecuted($method, $parameters, $time, $this));
         }
 
         return $result;
@@ -122,12 +122,13 @@ abstract class Connection
     /**
      * Fire the given event if possible.
      *
-     * @param mixed $event
+     * @param string $event
+     * @param mixed $params
      */
-    protected function event($event)
+    protected function event($event, $params)
     {
         if (isset($this->event)) {
-            $this->event->trigger($event, $event->toArray());
+            $this->event->trigger($event, $params);
         }
     }
 
